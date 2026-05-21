@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import Counter
 
 from multigame import py_simulate_multigame
 
@@ -54,13 +55,11 @@ def finish_prob(m_markov, n):
 
     return final_state[-1]
 
-def simulate_multigame_py(size, jumps, tot_games, max_count):
+def simulate_multigame_py(size, jumps, tot_games):
 
-    counts = [0] * (max_count+1)
-    for i in range(tot_games):
-        counts[simulate_game(size, jumps)] += 1
+    results = Counter(simulate_game(size, jumps) for _ in range(tot_games))
 
-    return counts
+    return [results[i] for i in range(len(results) + 1)]
 
 def simulate_multigame_cpp(size, jumps, tot_games, max_count):
 
@@ -71,16 +70,16 @@ def simulate_multigame_cpp(size, jumps, tot_games, max_count):
 
     return py_simulate_multigame(size, jumps_arr, tot_games)
 
-def make_plot(title, counts, tot_games, prob, max_count):
+def make_plot(title, counts, tot_games, probs):
 
-    expected_n = tot_games * prob 
+    expected_n = tot_games * probs
     xlims = (0, 200)
     ylims = (0, 1.1 * expected_n.max())
 
     plt.style.use('ggplot')
 
     fig = plt.figure(figsize=(16,10))
-    plt.bar(range(max_count+1), counts, width=1.0, alpha=0.75)
+    plt.bar(range(len(counts)), counts, width=1.0, alpha=0.75)
     plt.title(f"{title} ({tot_games} games)", loc="left")
     plt.xlabel("Rolls to finish")
     plt.ylabel("Frequency")

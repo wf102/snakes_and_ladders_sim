@@ -19,7 +19,7 @@ jumps = {**(snakes or {}), **(ladders or {})}
 # Use Python --------------------------------------------------
 
 start = time.time()
-counts_py = simulate_multigame_py(size, jumps, tot_games, max_count)
+counts_py = simulate_multigame_py(size, jumps, tot_games)
 end = time.time()
 dt_py = end-start
 
@@ -40,19 +40,19 @@ m_markov = build_matrkov_matrix(size, jumps)
 cum_prob = [finish_prob(m_markov, n) for n in range(max_count)]
 
 # Probability of finishing after precicely n rolls
-prob = np.diff(cum_prob, prepend=0)
+probs = np.diff(cum_prob, prepend=0)
 
 # Probability of draw (both players finish on same roll)
-prob_draw = sum([p*p for p in prob])
+prob_draw = sum([p*p for p in probs])
 
 # Expected rolls to finish
-expected_turns = np.dot(prob, np.arange(len(prob)))
+expected_turns = np.dot(probs, np.arange(len(probs)))
 
 
 # Plotting
 
-make_plot("Python", counts_py, tot_games, prob, max_count)
-make_plot("C++", counts_cpp, tot_games, prob, max_count)
+make_plot("Python", counts_py, tot_games, probs)
+make_plot("C++", counts_cpp, tot_games, probs)
 
 # Print summary stats
 
