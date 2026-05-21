@@ -84,7 +84,7 @@ def make_plot(title, counts, tot_games, prob, max_count, expected_turns, prob_dr
         Probability of draw:  {prob_draw:.4f}"""
 
     fig = plt.figure(figsize=(16,10))
-    plt.bar(range(max_count+1), counts, width=0.7, alpha=0.75)
+    plt.bar(range(max_count+1), counts, width=1.0, alpha=0.75)
     plt.title(title, loc="left")
     plt.xlabel("Rolls to finish")
     plt.ylabel("Frequency")
