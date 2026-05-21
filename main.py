@@ -51,11 +51,10 @@ prob_draw = sum([p*p for p in prob])
 print(f"draw prob {prob_draw}")
 
 # Expected rolls to finish
-turns = np.arange(1, len(prob)+1)
+turns = np.arange(0, len(prob))
+
 expected_turns = np.dot(prob, turns)
 print(f"expected turns {expected_turns}")
-
-
 
 
 # Plotting
