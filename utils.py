@@ -42,8 +42,10 @@ def build_matrkov_matrix(size, jumps):
     # Combined trans matrix
     return np.matmul(mat_jumps, mat_basic)
 
-def finish_prob(m_markov, n, size):
+def finish_prob(m_markov, n):
 # Calc prob of finish in <=n thows
+
+    size = m_markov.shape[0] - 1
 
     initial_state = np.zeros(size+1)
     initial_state[0] = 1

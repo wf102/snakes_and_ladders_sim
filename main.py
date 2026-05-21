@@ -41,7 +41,7 @@ counts_cpp = simulate_multigame_cpp(size, jumps, tot_games, max_count)
 m_markov = build_matrkov_matrix(size, jumps)
 
 # Cumulative probability of finishing within n rolls
-cum_prob = [finish_prob(m_markov, n, size) for n in range(max_count)]
+cum_prob = [finish_prob(m_markov, n) for n in range(max_count)]
 
 # Probability of finishing after precicely n rolls
 prob = np.diff(cum_prob, prepend=0)
