@@ -3,7 +3,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 
-from utils import build_matrkov_matrix, finish_prob, simulate_multigame_py, simulate_multigame_cpp
+from utils import build_matrkov_matrix, finish_prob, simulate_multigame_py, simulate_multigame_cpp, make_plot
 
 rng = np.random.default_rng(seed=42)
 
@@ -66,7 +66,7 @@ m_markov = build_matrkov_matrix(size, jumps)
 cum_prob = [finish_prob(m_markov, n, size) for n in range(max_count)]
 
 # Probability of finishing after precicely n rolls
-prob = np.diff(cum_prob, prepend=0)
+prob = np.diff(cum_prob)#, prepend=0)
 
 # Probability of draw (both players finish on same roll)
 prob_draw = sum([p*p for p in prob])
@@ -84,47 +84,5 @@ print(f"expected turns {expected_turns}")
 
 # Plotting
 
-expected_n = tot_games * prob 
-xlims = (0, 200)
-ylims = (0, 1.1 * expected_n.max())
-
-plt.style.use('ggplot')
-
-    # Time to play:  {dt_cpp:.2f} s
-text = f"""
-    Number of games:  {tot_games}
-    Expected rolls to finish:  {expected_turns:.2f}
-    Probability of draw:  {prob_draw:.4f}"""
-
-fig = plt.figure(figsize=(16,10))
-plt.bar(range(max_count+1), counts_cpp, width=0.7, alpha=0.75)
-plt.title(f"C++", loc="left")
-plt.xlabel("Rolls to finish")
-plt.ylabel("Frequency")
-plt.xlim(xlims)
-plt.ylim(ylims)
-plt.plot(expected_n, color = "k", alpha=0.75)
-# plt.legend(["Expected", "Observed"])
-plt.text(.7, .95, text, ha='left', va='top', transform=plt.gca().transAxes, fontsize=12)
-plt.savefig("plots/results_cpp.png")
-
-
-    # Time to play:  {dt_py:.2f} s
-text = f"""
-    Number of games:  {tot_games}
-    Expected rolls to finish:  {expected_turns:.2f}
-    Probability of draw:  {prob_draw:.4f}"""
-
-fig = plt.figure(figsize=(16,10))
-plt.bar(range(max_count+1), counts_py, width=0.8)
-plt.title(f"Python", loc="left")
-plt.xlabel("Rolls to finish")
-plt.ylabel("Frequency")
-plt.xlim(xlims)
-plt.ylim(ylims)
-plt.plot(expected_n)
-# plt.legend(["Expected", "Observed"])
-plt.text(.8, .9, text, ha='left', va='top', transform=plt.gca().transAxes)
-plt.savefig("plots/results_py.png")
-
-
+make_plot("Python", counts_py, tot_games, prob, max_count, expected_turns, prob_draw)
+make_plot("C++", counts_cpp, tot_games, prob, max_count, expected_turns, prob_draw)
