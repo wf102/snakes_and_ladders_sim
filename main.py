@@ -27,7 +27,7 @@ dt_py = end-start
 # Use C++ -----------------------------------------------------
 
 start = time.time()
-counts_cpp = simulate_multigame_cpp(size, jumps, tot_games, max_count)
+counts_cpp = simulate_multigame_cpp(size, jumps, tot_games)
 end = time.time()
 dt_cpp = end-start
 

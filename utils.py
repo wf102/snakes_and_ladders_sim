@@ -61,7 +61,7 @@ def simulate_multigame_py(size, jumps, tot_games):
 
     return [results[i] for i in range(len(results) + 1)]
 
-def simulate_multigame_cpp(size, jumps, tot_games, max_count):
+def simulate_multigame_cpp(size, jumps, tot_games):
 
     # Convert jumps dict to array for C++
     jumps_arr = np.zeros(size + 1, dtype=np.int32)

@@ -39,40 +39,20 @@ std::vector<int> simulateMultigame(
     int tot_games
 ){
 
-    std::vector<int> counts(1001, 0);
+    std::vector<int> counts;
 
-    // std::cout << "C++!!!!!!!!!!!!!!!!" << std::endl;
-    // std::cout << tot_games << std::endl;
-    // int throws[50];
-    // transitions[10] = 50;
-    // transitions[60] = 20;
-    // tot_games = 1000000;
-    
-    int tot_throws = 0;
     for(int i=0; i<tot_games; i++){
         // throws[i] = simulate_game(100, transitions);
         // std::cout << i << std::endl;
-        counts[simulateGame(100, transitions)] += 1;
+        int n_rolls = simulateGame(size, transitions);
+        
+        if (n_rolls >= counts.size()) {
+            counts.resize(n_rolls + 1, 0);
+        }
+        
+        counts[n_rolls]++;
     }
 
     return counts;
 
 }
-
-
-
- 
-
-
-
-
-// std::vector<int> simulate_many_games(
-//     int size,
-//     const std::vector<int>& transitions,
-//     int n_games
-// ){
-//     for (int i=1; i<n_games+1; i++){
-
-//     }
-// }
-
