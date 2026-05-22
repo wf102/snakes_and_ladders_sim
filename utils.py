@@ -70,6 +70,19 @@ def simulate_multigame_cpp(size, jumps, tot_games):
 
     return py_simulate_multigame(size, jumps_arr, tot_games)
 
+def calc_cumulative_prob(m_markov, threshold = 1.0 - 1e-9):
+    
+    cum_prob = []
+    n = 0
+    p = 0
+
+    while p < threshold:
+        p = finish_prob(m_markov, n)
+        cum_prob.append(p)
+        n += 1
+
+    return cum_prob
+
 def make_plot(title, counts, tot_games, probs):
 
     expected_n = tot_games * probs

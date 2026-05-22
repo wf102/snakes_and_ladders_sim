@@ -2,11 +2,10 @@ import yaml
 import numpy as np
 import time
 
-from utils import build_matrkov_matrix, finish_prob, simulate_multigame_py, simulate_multigame_cpp, make_plot
+from utils import build_matrkov_matrix, simulate_multigame_py, simulate_multigame_cpp, calc_cumulative_prob, make_plot
 
 rng = np.random.default_rng(seed=42)
 
-max_count = 1000
 tot_games = 100000
 
 with open("board.yaml") as f:
@@ -32,29 +31,30 @@ end = time.time()
 dt_cpp = end-start
 
 
-# Markov matrix  ----------------------------------------
+# Markov matrix  ----------------------------------------------
 
 m_markov = build_matrkov_matrix(size, jumps)
 
 # Cumulative probability of finishing within n rolls
-cum_prob = [finish_prob(m_markov, n) for n in range(max_count)]
+cum_prob = calc_cumulative_prob(m_markov)
 
 # Probability of finishing after precicely n rolls
 probs = np.diff(cum_prob, prepend=0)
 
-# Probability of draw (both players finish on same roll)
+# Probability of draw with two players (both players finish on same roll)
 prob_draw = sum([p*p for p in probs])
 
 # Expected rolls to finish
 expected_turns = np.dot(probs, np.arange(len(probs)))
 
 
-# Plotting
+# Plotting ----------------------------------------------------
 
 make_plot("Python", counts_py, tot_games, probs)
 make_plot("C++", counts_cpp, tot_games, probs)
 
-# Print summary stats
+
+# Print summary stats  ----------------------------------------
 
 text = f"""
 ============ Summary stats ============
