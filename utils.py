@@ -2,11 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
 
+
 from multigame import py_simulate_multigame
 
 rng = np.random.default_rng(seed=42)
 
-def simulate_game(size, jumps):
+def simulate_game(size: int, jumps: dict[int, int]) -> int:
+
+    """Simulate a single game of S&L, for a given board (size and set of jumps)"""
+
     position = 0
     throws = 0
 
@@ -22,7 +26,12 @@ def simulate_game(size, jumps):
 
     return throws
 
-def build_matrkov_matrix(size, jumps):
+def build_matrkov_matrix(size: int, jumps: dict[int, int]) -> np.ndarray:
+
+    """
+    Generate Markov matrix for a given board (size and set of jumps)
+    Note this includes the zeroth space (off the board).
+    """
 
     # Trans matrix for rolls on basic board (no snakes & ladders)
     mat_basic = np.zeros((size+1, size+1))
@@ -43,8 +52,10 @@ def build_matrkov_matrix(size, jumps):
     # Combined trans matrix
     return np.matmul(mat_jumps, mat_basic)
 
-def finish_prob(m_markov, n):
-# Calc prob of finish in <=n thows
+
+def finish_prob(m_markov: np.ndarray, n: int) -> float:
+
+    """Calculate the probability of finishing in <=n thows, for a given Markov matrix."""
 
     size = m_markov.shape[0] - 1
 
@@ -55,13 +66,23 @@ def finish_prob(m_markov, n):
 
     return final_state[-1]
 
-def simulate_multigame_py(size, jumps, tot_games):
+def simulate_multigame_py(size: int, jumps: dict[int, int], tot_games: int) -> list[int]:
+
+    """
+    Run multiple S&L games, using python implementation.
+    Return a list of counts by index for number of rolls required to finish.
+    """
 
     results = Counter(simulate_game(size, jumps) for _ in range(tot_games))
 
     return [results[i] for i in range(len(results) + 1)]
 
-def simulate_multigame_cpp(size, jumps, tot_games):
+def simulate_multigame_cpp(size: int, jumps: dict[int, int], tot_games: int) -> dict[int, int]:
+
+    """
+    Run multiple S&L games, using C++ implementation.
+    Return a list of counts by index for number of rolls required to finish.
+    """
 
     # Convert jumps dict to array for C++
     jumps_arr = np.zeros(size + 1, dtype=np.int32)
@@ -70,8 +91,10 @@ def simulate_multigame_cpp(size, jumps, tot_games):
 
     return py_simulate_multigame(size, jumps_arr, tot_games)
 
-def calc_cumulative_prob(m_markov, threshold = 1.0 - 1e-9):
-    
+def calc_cumulative_prob(m_markov: np.ndarray, threshold: float = 1.0 - 1e-9) -> list[float]:
+
+    """Calculate cumulative probability of finishing after n throws."""
+
     cum_prob = []
     n = 0
     p = 0
@@ -83,7 +106,12 @@ def calc_cumulative_prob(m_markov, threshold = 1.0 - 1e-9):
 
     return cum_prob
 
-def make_plot(title, counts, tot_games, probs):
+def make_plot(title: str, counts: list[int], tot_games: int, probs: np.ndarray) -> None:
+
+    """
+    Generate and save plot of distribution of number of throw to finish.
+    Include expected distribution via Markov matrix.
+    """
 
     expected_n = tot_games * probs
 
