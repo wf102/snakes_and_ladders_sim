@@ -86,7 +86,13 @@ def calc_cumulative_prob(m_markov, threshold = 1.0 - 1e-9):
 def make_plot(title, counts, tot_games, probs):
 
     expected_n = tot_games * probs
-    xlims = (0, 200)
+
+    # Get x upper limit for plot by finding first time prob dips below threshold
+    threshold = 1e-4
+    peak_idx = np.argmax(probs)
+    idx = peak_idx + 1 + np.argmax(probs[peak_idx + 1:] < threshold)
+
+    xlims = (0, idx)
     ylims = (0, 1.1 * expected_n.max())
 
     plt.style.use('ggplot')
