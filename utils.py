@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from collections import Counter
 
 
-from multigame import py_simulate_multigame
+from multigame import simulate_multigame_pyx
+# from multigame import py_simulate_multigame
 
 rng = np.random.default_rng(seed=42)
 
@@ -89,7 +90,7 @@ def simulate_multigame_cpp(size: int, jumps: dict[int, int], tot_games: int) -> 
     for k, v in jumps.items():
         jumps_arr[k] = v
 
-    return py_simulate_multigame(size, jumps_arr, tot_games)
+    return simulate_multigame_pyx(size, jumps_arr, tot_games)
 
 def calc_cumulative_prob(m_markov: np.ndarray, threshold: float = 1.0 - 1e-9) -> list[float]:
 

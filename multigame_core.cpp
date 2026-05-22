@@ -42,8 +42,7 @@ std::vector<int> simulateMultigame(
     std::vector<int> counts;
 
     for(int i=0; i<tot_games; i++){
-        // throws[i] = simulate_game(100, transitions);
-        // std::cout << i << std::endl;
+
         int n_rolls = simulateGame(size, transitions);
         
         if (n_rolls >= counts.size()) {
