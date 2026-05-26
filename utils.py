@@ -2,9 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
 
-
-from multigame import simulate_multigame_pyx
-# from multigame import py_simulate_multigame
+from multigame import simulate_multigame_pyx  # type: ignore[import-not-found]
 
 rng = np.random.default_rng(seed=42)
 
@@ -20,7 +18,7 @@ def simulate_game(size: int, jumps: dict[int, int]) -> int:
         throws += 1
 
         # Roll dice
-        position = position + rng.integers(1,7)
+        position = position + int(rng.integers(1,7))
         
         # Apply snakes & ladders
         position = jumps.get(position, position)
@@ -65,7 +63,7 @@ def finish_prob(m_markov: np.ndarray, n: int) -> float:
 
     final_state = np.linalg.matrix_power(m_markov, n) @ initial_state
 
-    return final_state[-1]
+    return float(final_state[-1])
 
 def simulate_multigame_py(size: int, jumps: dict[int, int], tot_games: int) -> list[int]:
 
@@ -98,7 +96,7 @@ def calc_cumulative_prob(m_markov: np.ndarray, threshold: float = 1.0 - 1e-9) ->
 
     cum_prob = []
     n = 0
-    p = 0
+    p = 0.0
 
     while p < threshold:
         p = finish_prob(m_markov, n)
